@@ -215,14 +215,20 @@ class PHP extends Base
      */
     public function gettext($msg)
     {
-        if (!@$this->parsed[$this->locale][$this->domain]) {
-            $this->parse($this->locale, $this->domain);
-        }
-
+        $this->parseIf();
         if (array_key_exists($msg, $this->translationTable[$this->locale][$this->domain])) {
             return $this->translationTable[$this->locale][$this->domain][$msg][0];
         }
         return $msg;
+    }
+
+    /**
+     * Parse a file if are no parsed
+     */
+    protected function parseIf(){
+        if (!$this->parsed[$this->locale][$this->domain]) {
+            $this->parse($this->locale, $this->domain);
+        }
     }
 
     /**
@@ -263,10 +269,7 @@ class PHP extends Base
      */
     public function ngettext($msg, $msg_plural, $count)
     {
-        if (!@$this->parsed[$this->locale][$this->domain]) {
-            $this->parse($this->locale, $this->domain);
-        }
-
+        $this->parseIf();
         $msg = (string) $msg;
 
         if (array_key_exists($msg, $this->translationTable[$this->locale][$this->domain])) {
