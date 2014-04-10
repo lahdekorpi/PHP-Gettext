@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-08-11 22:15+0200\n"
+"PO-Revision-Date: 2014-04-10 12:51-0400\n"
+"Last-Translator: Alberto Berroteran <alberroteran at gmail dot com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: PHP.php:65
+msgid "File does not exist"
+msgstr "El archivo no existe"
+
+#: PHP.php:70
+msgid "File is too small"
+msgid_plural "Files are too small"
+msgstr[0] "El archivo es muy pequeño"
+msgstr[1] "Los archivos son muy pequeños"
