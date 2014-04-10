@@ -5,6 +5,16 @@ Wrapper for Gettext. This allow reading .mo files (machine object) in PHP if nat
 
 Use
 =====
+For composer add to your **composer.json**
+```json
+{
+    "require": {
+        "ashrey/php-gettext": "dev-master"
+    }
+}
+```
+ 
+
 ```php
 use \Ashrey\Gettext\Base;
 require  __DIR__."/../autoload.php";
