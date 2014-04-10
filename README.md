@@ -5,13 +5,14 @@ Wrapper for Gettext. This allow reading .mo files (machine object) in PHP if nat
 
 Use
 =====
+```php
 use \Ashrey\Gettext\Base;
 require  __DIR__."/../autoload.php";
 register_gettext_autoload();
 /*use translator to spanish*/
 $trans = Base::getInstance($dirname, "gettext", "es");
 echo $trans->gettext("File does not exist");
-
+```
 
 
 
