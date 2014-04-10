@@ -1,6 +1,6 @@
 <?php
 
-include_once "Gettext.php";
+require  __DIR__."/../Gettext.php";
 
 $dirname = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
 $gn = new Gettext_PHP($dirname . "/", "gettext", "de");
