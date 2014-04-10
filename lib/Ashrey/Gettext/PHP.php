@@ -1,6 +1,8 @@
 <?php
+namespace Ashrey\Gettext;
 /*
- * Copyright (c) 2009 David Soria Parra
+ * Copyright (c) 2014 David Soria Parra & Alberto Berroteran
+ *
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +30,7 @@
  * @copyright (c) 2009 David Soria Parra <sn_@gmx.net>
  * @author David Soria Parra <sn_@gmx.net>
  */
-class Gettext_PHP extends Gettext
+class PHP extends Base
 {
     /**
      * First magic word in the MO header

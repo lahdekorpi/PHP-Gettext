@@ -1,6 +1,7 @@
 <?php
+namespace Ashrey\Gettext;
 /*
- * Copyright (c) 2009 David Soria Parra
+ * Copyright (c) 2014 David Soria Parra & Alberto Berroteran
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +22,15 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * Gettext implementation in PHP
  *
  * @copyright (c) 2009 David Soria Parra <sn_@gmx.net>
  * @author David Soria Parra <sn_@gmx.net>
  */
-class Gettext_Extension extends Gettext
+abstract class Base
 {
-    /**
-     * Initialize a new gettext class
-     *
-     * @param String $mofile The file to parse
-     */
-    public function __construct($directory, $domain, $locale)
-    {
-        setlocale(LC_ALL, $locale);
-        bindtextdomain($domain, $directory);
-        textdomain($domain);
-    }
+    private static $instance = null;
 
     /**
      * Return a translated string
@@ -48,12 +38,11 @@ class Gettext_Extension extends Gettext
      * If the translation is not found, the original passed message
      * will be returned.
      *
+     * @param String $msg The message to translate
+     * 
      * @return Translated message
      */
-    public function gettext($msg)
-    {
-        return gettext($msg);
-    }
+    public abstract function gettext($msg);
 
     /**
      * Overrides the domain for a single lookup
@@ -62,14 +51,11 @@ class Gettext_Extension extends Gettext
      * will be returned.
      *
      * @param String $domain The domain to search in
-     * @param String $msg The message to search for
-     *
-     * @return Translated string
+     * @param String $msg The message to translate
+     * 
+     * @return Translated message
      */
-    public function dgettext($domain, $msg)
-    {
-        return dgettext($domain, $msg);
-    }
+    public abstract function dgettext($domain, $msg);
 
     /**
      * Return a translated string in it's plural form
@@ -84,10 +70,7 @@ class Gettext_Extension extends Gettext
      *
      * @return Translated string
      */
-    public function ngettext($msg, $msg_plural, $count)
-    {
-        return ngettext($msg, $msg_plural, $count);
-    }
+    public abstract function ngettext($msg1, $msg2, $count);
 
     /**
      * Override the current domain for a single plural message lookup
@@ -103,8 +86,31 @@ class Gettext_Extension extends Gettext
      *
      * @return Translated string
      */
-    public function dngettext($domain, $msg, $msg_plural, $count)
+     public abstract function dngettext($domain, $msg1, $msg2, $count);
+
+    /**
+     * Returns an instance of a gettext implementation depending on
+     * the capabilities of the PHP installation. If the gettext extension
+     * is loaded, we use the native gettext() bindings, otherwise we use
+     * an own implementation
+     *
+     * @param String $directory Directory to search the mo files in
+     * @param String $domain    The current domain
+     * @param String $locale    The local
+     *
+     * @return Gettext An instance of a Gettext implementation
+     */
+    public static function getInstance($directory, $domain, $locale)
     {
-        return dngettext($domain, $msg, $msg_plural, $count);
+        $key = $directory . $domain . $locale;
+        if (!isset(self::$instance[$key])) {
+            if (extension_loaded('gettext')) {
+                self::$instance[$key] = new Gettext_Extension($directory, $domain, $locale);
+            } else {
+                self::$instance[$key] = new Gettext_PHP($directory, $domain, $locale);
+            }
+        }
+
+        return self::$instance[$key];
     }
 }
