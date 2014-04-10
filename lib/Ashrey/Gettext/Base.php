@@ -102,15 +102,12 @@ abstract class Base
      */
     public static function getInstance($directory, $domain, $locale)
     {
-        $key = $directory . $domain . $locale;
+        $key = "$directory-$domain-$locale";
         if (!isset(self::$instance[$key])) {
-            if (extension_loaded('gettext')) {
-                self::$instance[$key] = new Gettext_Extension($directory, $domain, $locale);
-            } else {
-                self::$instance[$key] = new Gettext_PHP($directory, $domain, $locale);
-            }
+           self::$instance[$key] = (extension_loaded('gettext')) ?
+                new GNU($directory, $domain, $locale):
+                new PHP($directory, $domain, $locale);
         }
-
         return self::$instance[$key];
     }
 }
