@@ -1,10 +1,12 @@
 <?php
-
-require  __DIR__."/../Gettext.php";
+use \Ashrey\Gettext\GNU;
+use \Ashrey\Gettext\PHP;
+require  __DIR__."/../autoload.php";
+register_gettext_autoload();
 
 $dirname = realpath(dirname($_SERVER['SCRIPT_FILENAME']));
-$gn = new Gettext_PHP($dirname . "/", "gettext", "de");
-$ge = new Gettext_Extension($dirname . "/", "gettext", "de");
+$gn = new PHP($dirname . "/", "gettext", "de");
+$ge = new GNU($dirname . "/", "gettext", "de");
 var_dump($gn->gettext("File does not exist"));
 var_dump($ge->gettext("File does not exist"));
 var_dump($gn->gettext("File does not exist") == $ge->gettext("File does not exist"));
