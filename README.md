@@ -1,11 +1,18 @@
 About
 -----
-This is a PHP Implementation of Gettext.
+This is a PHP Implementation of Gettext. This allow reading .mo files (machine object) in PHP
+is gettext extension are not enable.
+
+
+Use
+=====
+
+
 
 License Information
 -------------------
 
-Copyright (c) 2009 David Soria Parra
+Copyright (c) 2014 David Soria Parra Modifiend by Alberto Berroteran
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
