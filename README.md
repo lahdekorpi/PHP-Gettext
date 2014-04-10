@@ -1,11 +1,17 @@
 About
 -----
-This is a PHP Implementation of Gettext. This allow reading .mo files (machine object) in PHP
-is gettext extension are not enable.
+Wrapper for Gettext. This allow reading .mo files (machine object) in PHP if native gettext extension are not enable.
 
 
 Use
 =====
+use \Ashrey\Gettext\Base;
+require  __DIR__."/../autoload.php";
+register_gettext_autoload();
+/*use translator to spanish*/
+$trans = Base::getInstance($dirname, "gettext", "es");
+echo $trans->gettext("File does not exist");
+
 
 
 
