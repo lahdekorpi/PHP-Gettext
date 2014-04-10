@@ -99,7 +99,7 @@ class PHP extends Base
      * If an exception occured, null is returned. This is intentionally
      * as we need to get close to ext/gettexts beahvior.
      *
-     * @param Ressource $fp     The open file handler to the MO file
+     * @param resource $fp     The open file handler to the MO file
      * @param Integer   $offset The offset to the table that should be parsed
      * @param Integer   $num    The number of strings to parse
      *
@@ -108,7 +108,7 @@ class PHP extends Base
     private function parseOffsetTable($fp, $offset, $num)
     {
         if (fseek($fp, $offset, SEEK_SET) < 0) {
-            return null;
+            return array();
         }
 
         $table = array();
@@ -116,7 +116,6 @@ class PHP extends Base
             $data    = fread($fp, 8);
             $table[] = unpack("lsize/loffset", $data);
         }
-
         return $table;
     }
 
