@@ -22,7 +22,7 @@ namespace Ashrey\Gettext;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
+use \SplFileInfo;
 
 /**
  * Gettext implementation in PHP
@@ -147,61 +147,70 @@ class PHP extends Base
      */
     private function parse($locale, $domain)
     {
-        $this->translationTable[$locale][$domain] = array();
-        $mofile = sprintf("%s/%s/LC_MESSAGES/%s.mo", $this->dir, $locale, $domain);
-        $cachefile = sprintf("%s/%s/LC_MESSAGES/%s.ser", $this->dir, $locale, $domain);
-
-        if (!file_exists($mofile)) {
+        $this->translationTable[$locale][$domain] = array(); 
+        $mofile    = new SplFileInfo(sprintf("%s/%s/LC_MESSAGES/%s.mo", $this->dir, $locale, $domain));
+        $cachefile = new SplFileInfo(sprintf("%s/%s/LC_MESSAGES/%s.ser", $this->dir, $locale, $domain));
+        if (!$mofile->isFile()) {
             $this->parsed[$locale][$domain] = true;
             return;
         }
 
-        $filesize = filesize($mofile);
+        $filesize = $mofile->getSize();
         if ($filesize < 4 * 7) {
             $this->parsed[$locale][$domain] = true;
             return;
         }
 
-        if (($tmpobj = @file_get_contents($cachefile)) === FALSE || @filemtime($cachefile) < filemtime($mofile)) {
-            /* check for filesize */
-            $fp = fopen($mofile, "rb");
-
-            $offsets = $this->parseHeader($fp);
-            if (null == $offsets || $filesize < 4 * ($offsets['num_strings'] + 7)) {
-                fclose($fp);
-                return;
-            }
-
-            $transTable = array();
-            $table = $this->parseOffsetTable($fp, $offsets['trans_offset'],
-                        $offsets['num_strings']);
-            if (null == $table) {
-                fclose($fp);
-                return;
-            }
-
-            foreach ($table as $idx => $entry) {
-                $transTable[$idx] = $this->parseEntry($fp, $entry);
-            }
-
-            $table = $this->parseOffsetTable($fp, $offsets['orig_offset'],
-                        $offsets['num_strings']);
-            foreach ($table as $idx => $entry) {
-                $entry = $this->parseEntry($fp, $entry);
-
-                $formes      = explode(chr(0), $entry);
-                $translation = explode(chr(0), $transTable[$idx]);
-                foreach($formes as $form) {
-                    $this->translationTable[$locale][$domain][$form] = $translation;
-                }
-            }
-            @file_put_contents($cachefile, serialize($this->translationTable[$locale][$domain]) );
-
-            fclose($fp);
+        if (!$cachefile->isReadable() || $cachefile->getMTime() < $mofile->getMTime()) {
+            $this->generateFile($mofile, $cachefile, $locale, $domain);
         } else {
-            $this->translationTable[$locale][$domain] = unserialize($tmpobj);
+            $tmp = file_get_contents($cachefile->getRealPath());
+            $this->translationTable[$locale][$domain] = unserialize($tmp);
         }
         $this->parsed[$locale][$domain] = true;
+    }
+
+    /**
+     * generate a file to cache
+     * @param SpleFileInfo $file .mo file
+     * @param SpleFileInfo $cache serialize file
+     * @param string $locale locale
+     * @param string $domain domain
+     */
+    protected function generateFile(SplFileInfo $file, SplFileInfo $cache, $locale, $domain){
+        /* check for filesize */
+        $fp = fopen($file->getRealPath(), "rb");
+        $offsets = $this->parseHeader($fp);
+        if (null == $offsets || $file->getSize() < 4 * ($offsets['num_strings'] + 7)) {
+            fclose($fp);
+            return;
+        }
+
+        $transTable = array();
+        $table = $this->parseOffsetTable($fp, $offsets['trans_offset'],
+                    $offsets['num_strings']);
+        if (null == $table) {
+            fclose($fp);
+            return;
+        }
+
+        foreach ($table as $idx => $entry) {
+            $transTable[$idx] = $this->parseEntry($fp, $entry);
+        }
+
+        $table = $this->parseOffsetTable($fp, $offsets['orig_offset'],
+                    $offsets['num_strings']);
+        foreach ($table as $idx => $entry) {
+            $entry = $this->parseEntry($fp, $entry);
+
+            $formes      = explode(chr(0), $entry);
+            $translation = explode(chr(0), $transTable[$idx]);
+            foreach($formes as $form) {
+                $this->translationTable[$locale][$domain][$form] = $translation;
+            }
+        }
+        file_put_contents($cache->getPathName(), serialize($this->translationTable[$locale][$domain]) );
+        fclose($fp);
     }
 
     /**
@@ -225,7 +234,7 @@ class PHP extends Base
      * Parse a file if are no parsed
      */
     protected function parseIf(){
-        if (!$this->parsed[$this->locale][$this->domain]) {
+        if (empty($this->parsed[$this->locale][$this->domain])) {
             $this->parse($this->locale, $this->domain);
         }
     }
