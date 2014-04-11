@@ -172,13 +172,12 @@ class PHP extends Base
         /* check for filesize */
         $fp = fopen($file->getRealPath(), "rb");
         $offsets = $this->parseHeader($fp);
-        if (null == $offsets || $file->getSize() < 4 * ($offsets['num_strings'] + 7)) {
+        if (is_null($offsets) || $file->getSize() < 4 * ($offsets['num_strings'] + 7)) {
             fclose($fp);
             return;
         }
-        $table = $this->parseOffsetTable($fp, $offsets['trans_offset'],
-                    $offsets['num_strings']);
-        if (null == $table) {
+        $table = $this->parseOffsetTable($fp, $offsets['trans_offset'], $offsets['num_strings']);
+        if (is_null($table)) {
             fclose($fp);
             return;
         }
