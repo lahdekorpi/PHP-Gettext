@@ -123,7 +123,7 @@ class PHP extends Base
      * Parse a string as referenced by an table. Returns an
      * array with the actual string.
      *
-     * @param Ressource $fp    The open file handler to the MO fie
+     * @param resource $fp    The open file handler to the MO fie
      * @param Array     $entry The entry as parsed by parseOffsetTable()
      *
      * @return Parsed string
@@ -176,15 +176,27 @@ class PHP extends Base
             fclose($fp);
             return;
         }
-
-        $transTable = array();
         $table = $this->parseOffsetTable($fp, $offsets['trans_offset'],
                     $offsets['num_strings']);
         if (null == $table) {
             fclose($fp);
             return;
         }
+        $this->generateTables($fp, $locale, $domain, $table, $offsets);
+        file_put_contents($cache->getPathName(), serialize($this->translationTable[$locale][$domain]) );
+        fclose($fp);
+    }
 
+    /**
+     * Generate the tables
+     * @param resource $fp
+     * @param string $locale 
+     * @param string $domain
+     * @param Array $table
+     * @param Array $offset
+     */
+    protected function generateTables($fp, $locale, $domain, Array $table, Array $offsets){
+        $transTable = array();
         foreach ($table as $idx => $entry) {
             $transTable[$idx] = $this->parseEntry($fp, $entry);
         }
@@ -193,15 +205,12 @@ class PHP extends Base
                     $offsets['num_strings']);
         foreach ($table as $idx => $entry) {
             $entry = $this->parseEntry($fp, $entry);
-
             $formes      = explode(chr(0), $entry);
             $translation = explode(chr(0), $transTable[$idx]);
             foreach($formes as $form) {
                 $this->translationTable[$locale][$domain][$form] = $translation;
             }
         }
-        file_put_contents($cache->getPathName(), serialize($this->translationTable[$locale][$domain]) );
-        fclose($fp);
     }
 
     /**
