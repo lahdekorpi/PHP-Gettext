@@ -152,13 +152,23 @@ class PHP extends Base
         $cachefile = new SplFileInfo(sprintf("%s/%s/LC_MESSAGES/%s.ser", $this->dir, $locale, $domain));
         if (!$mofile->isFile() || $mofile->getSize() < 4 * 7) {
             //nothing
-        }elseif (!$cachefile->isReadable() || $cachefile->getMTime() < $mofile->getMTime()) {
+        }elseif (static::generate($mofile, $cachefile)) {
             $this->generateFile($mofile, $cachefile, $locale, $domain);
         } else {
             $tmp = file_get_contents($cachefile->getRealPath());
             $this->translationTable[$locale][$domain] = unserialize($tmp);
         }
         $this->parsed[$locale][$domain] = true;
+    }
+
+    /**
+     * Return if cache is usable
+     * @param SpleFileInfo $file .mo file
+     * @param SpleFileInfo $cache serialize file
+     * @return bool 
+     */
+    static function generate(SplFileInfo $file, SplFileInfo $cache){
+        return !$cache->isReadable() || $cache->getMTime() < $file->getMTime()
     }
 
     /**
