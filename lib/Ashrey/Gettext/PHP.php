@@ -150,18 +150,9 @@ class PHP extends Base
         $this->translationTable[$locale][$domain] = array(); 
         $mofile    = new SplFileInfo(sprintf("%s/%s/LC_MESSAGES/%s.mo", $this->dir, $locale, $domain));
         $cachefile = new SplFileInfo(sprintf("%s/%s/LC_MESSAGES/%s.ser", $this->dir, $locale, $domain));
-        if (!$mofile->isFile()) {
-            $this->parsed[$locale][$domain] = true;
-            return;
-        }
-
-        $filesize = $mofile->getSize();
-        if ($filesize < 4 * 7) {
-            $this->parsed[$locale][$domain] = true;
-            return;
-        }
-
-        if (!$cachefile->isReadable() || $cachefile->getMTime() < $mofile->getMTime()) {
+        if (!$mofile->isFile() || $mofile->getSize() < 4 * 7) {
+            //nothing
+        }elseif (!$cachefile->isReadable() || $cachefile->getMTime() < $mofile->getMTime()) {
             $this->generateFile($mofile, $cachefile, $locale, $domain);
         } else {
             $tmp = file_get_contents($cachefile->getRealPath());
