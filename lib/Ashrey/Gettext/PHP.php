@@ -67,7 +67,7 @@ class PHP extends Base
      * If an exception occured, null is returned. This is intentionally
      * as we need to get close to ext/gettexts beahvior.
      *
-     * @oaram Ressource $fp The open file handler to the MO file
+     * @param resource $fp The open file handler to the MO file
      *
      * @return An array of offset
      */
