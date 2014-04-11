@@ -168,7 +168,7 @@ class PHP extends Base
      * @return bool 
      */
     static function generate(SplFileInfo $file, SplFileInfo $cache){
-        return !$cache->isReadable() || $cache->getMTime() < $file->getMTime()
+        return !$cache->isReadable() || $cache->getMTime() < $file->getMTime();
     }
 
     /**
