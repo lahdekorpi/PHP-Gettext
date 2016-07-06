@@ -1,4 +1,5 @@
 <?php
+
 require_once 'PHPUnit/Framework.php';
 require_once '../Gettext.php';
 
@@ -36,4 +37,3 @@ class ExtensionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Dateien sind zu klein', $g->ngettext('File is too small', 'Files are too small', 0));
     }
 }
-

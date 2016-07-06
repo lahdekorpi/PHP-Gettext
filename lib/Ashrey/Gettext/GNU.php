@@ -1,4 +1,5 @@
 <?php
+
 namespace Ashrey\Gettext;
 
 /*
@@ -23,9 +24,8 @@ namespace Ashrey\Gettext;
  * THE SOFTWARE.
  */
 
-
 /**
- * Gettext implementation in PHP
+ * Gettext implementation in PHP.
  *
  * @copyright (c) 2009 David Soria Parra <sn_@gmx.net>
  * @author David Soria Parra <sn_@gmx.net>
@@ -33,9 +33,9 @@ namespace Ashrey\Gettext;
 class GNU extends Base
 {
     /**
-     * Initialize a new gettext class
+     * Initialize a new gettext class.
      *
-     * @param String $mofile The file to parse
+     * @param string $mofile The file to parse
      */
     public function __construct($directory, $domain, $locale)
     {
@@ -45,7 +45,7 @@ class GNU extends Base
     }
 
     /**
-     * Return a translated string
+     * Return a translated string.
      *
      * If the translation is not found, the original passed message
      * will be returned.
@@ -58,13 +58,13 @@ class GNU extends Base
     }
 
     /**
-     * Overrides the domain for a single lookup
+     * Overrides the domain for a single lookup.
      *
      * If the translation is not found, the original passed message
      * will be returned.
      *
-     * @param String $domain The domain to search in
-     * @param String $msg The message to search for
+     * @param string $domain The domain to search in
+     * @param string $msg    The message to search for
      *
      * @return Translated string
      */
@@ -74,15 +74,15 @@ class GNU extends Base
     }
 
     /**
-     * Return a translated string in it's plural form
+     * Return a translated string in it's plural form.
      *
      * Returns the given $count (e.g second, third,...) plural form of the
      * given string. If the id is not found and $num == 1 $msg is returned,
      * otherwise $msg_plural
      *
-     * @param String $msg The message to search for
-     * @param String $msg_plural A fallback plural form
-     * @param Integer $count Which plural form
+     * @param string $msg        The message to search for
+     * @param string $msg_plural A fallback plural form
+     * @param int    $count      Which plural form
      *
      * @return Translated string
      */
@@ -92,16 +92,16 @@ class GNU extends Base
     }
 
     /**
-     * Override the current domain for a single plural message lookup
+     * Override the current domain for a single plural message lookup.
      *
      * Returns the given $count (e.g second, third,...) plural form of the
      * given string. If the id is not found and $num == 1 $msg is returned,
      * otherwise $msg_plural
      *
-     * @param String $domain The domain to search in
-     * @param String $msg The message to search for
-     * @param String $msg_plural A fallback plural form
-     * @param Integer $count Which plural form
+     * @param string $domain     The domain to search in
+     * @param string $msg        The message to search for
+     * @param string $msg_plural A fallback plural form
+     * @param int    $count      Which plural form
      *
      * @return Translated string
      */
